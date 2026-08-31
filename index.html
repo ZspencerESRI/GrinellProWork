@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Grinnell Men's Basketball — 2026–27</title>
+<link rel="stylesheet" href="https://js.arcgis.com/4.33/esri/themes/light/main.css">
+<script src="https://js.arcgis.com/4.33/"></script>
+<style>
+:root{--red:#d71920;--blue:#1f4e79;--gold:#f4b942;--bg:#f3f5f7;--card:#fff;--line:#d8dee5;--text:#18212b;--muted:#65717e}
+*{box-sizing:border-box}html,body{height:100%;margin:0;font-family:Arial,sans-serif;color:var(--text);background:var(--bg)}
+.shell{height:100%;display:grid;grid-template-columns:300px 1fr 320px;grid-template-rows:auto 1fr auto;grid-template-areas:'head head head' 'left map right' 'foot foot foot';gap:10px;padding:10px}.card{background:var(--card);border:1px solid var(--line);border-radius:9px;overflow:hidden;box-shadow:0 1px 4px #0001}.head{grid-area:head;padding:12px 16px;display:flex;align-items:center;gap:18px}.head h1{font-size:20px;margin:0}.kpis{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}.kpi{border-left:3px solid var(--red);background:#f7f8fa;border-radius:5px;padding:5px 10px;text-align:right}.kpi b{display:block;font-size:18px}.kpi span{font-size:10px;text-transform:uppercase;color:var(--muted)}
+.side{display:flex;flex-direction:column;min-height:0}.left{grid-area:left}.right{grid-area:right}.label{padding:10px 12px;background:#f7f8fa;border-bottom:1px solid var(--line);font-size:11px;font-weight:bold;text-transform:uppercase;color:var(--muted);letter-spacing:.08em}.list{padding:10px;overflow:auto}.game{border:1px solid #e8ebef;background:#fafbfc;border-radius:6px;padding:8px 10px;margin-bottom:8px}.game small{display:block;color:var(--muted);text-transform:uppercase;font-weight:bold}.game strong{display:block;font-size:18px;margin:2px 0}.game em{font-size:11px;color:var(--muted);font-style:normal}.map{grid-area:map;position:relative}.map>div{height:100%}.legend{position:absolute;z-index:5;left:12px;bottom:28px;background:#fff;padding:8px 10px;border-radius:5px;box-shadow:0 1px 5px #0004;font-size:12px}.dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin:0 4px 0 9px}.dot:first-child{margin-left:0}.foot{grid-area:foot;padding:9px 14px;font-size:12px}.foot a{color:var(--red)}
+@media(max-width:900px){.shell{height:auto;min-height:100%;grid-template-columns:1fr;grid-template-rows:auto 60vh auto auto auto;grid-template-areas:'head' 'map' 'left' 'right' 'foot'}.head{align-items:flex-start;flex-direction:column}.kpis{margin-left:0}.side{max-height:550px}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header class="head card"><h1>Grinnell Men's Basketball — 2026–27</h1><div class="kpis"><div class="kpi"><b>26</b><span>Scheduled dates</span></div><div class="kpi"><b>15</b><span>Home dates</span></div><div class="kpi"><b>11</b><span>Away / neutral</span></div><div class="kpi"><b>18</b><span>Conference games</span></div></div></header>
+<aside class="side left card"><div class="label">Oct–Dec 2026</div><div class="list" id="leftList"></div></aside>
+<main class="map card"><div id="viewDiv"></div><div class="legend"><span class="dot" style="background:var(--red)"></span>Home <span class="dot" style="background:var(--blue)"></span>Away <span class="dot" style="background:var(--gold)"></span>Neutral / combined</div></main>
+<aside class="side right card"><div class="label">Jan–Feb 2027</div><div class="list" id="rightList"></div></aside>
+<footer class="foot card">Select a marker for game details. Tournament dates (Feb. 23, 26–27) are not mapped because opponent and location are TBD. <a href="https://pioneers.grinnell.edu/sports/mens-basketball/schedule/2026-27" target="_blank" rel="noopener">Official schedule</a>.</footer>
+</div>
+<script>
+const games=[
+['Oct 21 • Home','NIACC','Scrimmage • Time TBA'],['Oct 24 • Home','Alumni Game','Scrimmage • Time TBA'],['Nov 6 • Away','Greenville','Midnight • Greenville, IL'],['Nov 7 • Neutral','Covenant (Ga.)','1 PM • Greenville, IL'],['Nov 11 • Home','Principia','6 PM • Darby Gymnasium'],['Nov 14 • Home','Minn. North–Vermilion','1 PM • Darby Gymnasium'],['Nov 21 • Home','Cornell','3 PM • Conference'],['Nov 24 • Home','Beloit','7 PM • Conference'],['Dec 1 • Home','Knox','7:30 PM • Conference'],['Dec 5 • Away','Monmouth','3 PM • Monmouth, IL'],['Dec 12 • Away','Ripon','3 PM • Ripon, WI'],['Dec 30 • Home','East Texas Baptist','1 PM • Darby Gymnasium'],['Jan 1 • Home','Rockford','3 PM • Darby Gymnasium'],['Jan 6 • Home','Monmouth','7:30 PM • Conference'],['Jan 9 • Home','Lawrence','3 PM • Conference'],['Jan 12 • Away','Luther','7:30 PM • Decorah, IA'],['Jan 16 • Home','Ripon','3 PM • Conference'],['Jan 20 • Away','Illinois College','7:30 PM • Jacksonville, IL'],['Jan 23 • Home','Lake Forest','3 PM • Conference'],['Jan 26 • Away','Beloit','7 PM • Beloit, WI'],['Jan 30 • Away','Lawrence','3 PM • Appleton, WI'],['Feb 3 • Away','Knox','7:30 PM • Galesburg, IL'],['Feb 6 • Home','Luther','3 PM • Conference'],['Feb 9 • Home','Illinois College','7:30 PM • Conference'],['Feb 13 • Away','Lake Forest','3 PM • Lake Forest, IL'],['Feb 20 • Away','Cornell','3 PM • Mount Vernon, IA']];
+function fill(id,rows){document.getElementById(id).innerHTML=rows.map(g=>`<div class="game"><small>${g[0]}</small><strong>${g[1]}</strong><em>${g[2]}</em></div>`).join('')};fill('leftList',games.slice(0,12));fill('rightList',games.slice(12));
+require(['esri/Map','esri/views/MapView','esri/layers/GraphicsLayer','esri/Graphic','esri/widgets/Legend','esri/widgets/Home'],(Map,MapView,GraphicsLayer,Graphic,Legend,Home)=>{
+ const map=new Map({basemap:'streets-vector'});const view=new MapView({container:'viewDiv',map,center:[-90.5,41.8],zoom:6});const layer=new GraphicsLayer({title:'Game locations'});map.add(layer);
+ const sites=[
+ [-92.72,41.75,'Darby Gymnasium — Grinnell, Iowa','Home','Oct 21 NIACC; Oct 24 Alumni; Nov 11 Principia; Nov 14 Minnesota North–Vermilion; Nov 21 Cornell; Nov 24 Beloit; Dec 1 Knox; Dec 30 East Texas Baptist; Jan 1 Rockford; Jan 6 Monmouth; Jan 9 Lawrence; Jan 16 Ripon; Jan 23 Lake Forest; Feb 6 Luther; Feb 9 Illinois College'],
+ [-89.41,38.89,'Greenville, Illinois','Neutral / combined','Nov 6 Greenville University (away); Nov 7 Covenant College (neutral)'],[-90.65,40.91,'Monmouth, Illinois','Away','Dec 5 — Monmouth College'],[-88.84,43.84,'Ripon, Wisconsin','Away','Dec 12 — Ripon College'],[-91.79,43.30,'Decorah, Iowa','Away','Jan 12 — Luther College'],[-90.23,39.73,'Jacksonville, Illinois','Away','Jan 20 — Illinois College'],[-89.03,42.50,'Beloit, Wisconsin','Away','Jan 26 — Beloit College'],[-88.42,44.26,'Appleton, Wisconsin','Away','Jan 30 — Lawrence University'],[-90.37,40.95,'Galesburg, Illinois','Away','Feb 3 — Knox College'],[-87.84,42.26,'Lake Forest, Illinois','Away','Feb 13 — Lake Forest College'],[-91.42,41.92,'Mount Vernon, Iowa','Away','Feb 20 — Cornell College']];
+ const colors={'Home':[215,25,32,255],'Away':[31,78,121,255],'Neutral / combined':[244,185,66,255]};
+ layer.addMany(sites.map((s,i)=>new Graphic({geometry:{type:'point',longitude:s[0],latitude:s[1]},attributes:{OBJECTID:i+1,Location:s[2],Site:s[3],Games:s[4]},symbol:{type:'simple-marker',style:'circle',color:colors[s[3]],size:s[3]==='Home'?16:12,outline:{color:'white',width:1.5}},popupTemplate:{title:'{Location}',content:[{type:'fields',fieldInfos:[{fieldName:'Site',label:'Site type'},{fieldName:'Games',label:'Games'}]}]}})));
+ view.ui.add(new Home({view}),'top-left');view.when(()=>view.goTo(layer.graphics.toArray(),{padding:60}));
+ window.__esriView=view;window.__esriMap=map;window.__esriLayers={'Game locations':layer};window.__app={games};
+});
+</script>
+</body>
+</html>
